@@ -30,11 +30,6 @@ def find_optimal(X, f=None):
 X = range(1, 101)  # X= {1, ..., 100}
 find_optimal(X, f)
 
-# X2 = range() # X=ℝ (set of real numbers)
-start = 0
-end = 1.0
-num_samples = 1000
-
-# Generate samples from the interval
-samples = np.linspace(start, end, num_samples)
-find_optimal(samples, f2)
+# X=ℝ (set of real numbers)
+X2 = range(1, 2000)  # Restricting from 0 to 1,000
+find_optimal(X2, f2)
