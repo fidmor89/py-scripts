@@ -41,20 +41,36 @@ fi
 # Navigate to the specified directory
 cd "$directory" || exit
 
-# Iterate over each file in the directory
-for file in *; do
-    # Check if the file is a regular file (not a directory)
-    if [ -f "$file" ]; then
-        # Check if print only flag is set
-        if [ "$print_only" = true ]; then
-            echo "Would add $file to git"
-            echo "Would commit $file to git"
-        else
-            # Add the file to the staging area
-            git add "$file"
-            
-            # Commit the file with a commit message indicating the file name
-            git commit -m "Add $file"
-        fi
+# Get the list of changed files using git status
+changed_files=$(git status --porcelain | grep -E '^(M|A|D|..)' | cut -c 4-)
+
+# Iterate over each changed file
+for file in $changed_files; do
+    # Get the status of the file
+    status=$(git status --porcelain "$file" | cut -c 1)
+
+    # Determine the appropriate commit message based on the file status
+    case $status in
+        M )
+            commit_msg="Modify $file"
+            ;;
+        A )
+            commit_msg="Add $file"
+            ;;
+        D )
+            commit_msg="Delete $file"
+            ;;
+        * )
+            commit_msg="Update $file"
+            ;;
+    esac
+        
+    # Check if print only flag is set
+    if [ "$print_only" = true ]; then
+        echo "Would add $file to git"
+        echo "Would commit with message: $commit_msg"
+    else
+        git add "$file"
+        git commit -m "$commit_msg"
     fi
 done
