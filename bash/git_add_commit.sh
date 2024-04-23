@@ -61,7 +61,7 @@ for file in $changed_files; do
             commit_msg="Delete $file"
             ;;
         * )
-            commit_msg="Update $file"
+            commit_msg="Add $file"
             ;;
     esac
         
